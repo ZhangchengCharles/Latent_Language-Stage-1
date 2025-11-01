@@ -30,8 +30,8 @@ def main():
     
     memory_size = training_args.fixed_mem_size
 
-    train_file = "/path/to/train/file"
-    eval_file = "/path/to/dev/file"
+    train_file = "../../../pile_data/pile_train.json"
+    eval_file = "../../../pile_data/pile_eval.json"
 
     print("Loading dataset...")
 

@@ -99,13 +99,21 @@ class ICAE(torch.nn.Module):
         self.model_args = model_args
         self.training_args = training_args
         self.model_name = model_args.model_name_or_path
-        self.icae = AutoModelForCausalLM.from_pretrained(self.model_name, torch_dtype=torch.float16 if training_args.bf16 is False else torch.bfloat16, use_flash_attention_2=True, resume_download=True)
+        self.icae = AutoModelForCausalLM.from_pretrained(
+            self.model_name, 
+            torch_dtype=torch.float16 if training_args.bf16 is False else torch.bfloat16,
+            device_map=None
+	      )  
         
         self.training = self.model_args.train    
         
         if self.training:    # indepedent model for gradient checkpointing
-            self.decoder = AutoModelForCausalLM.from_pretrained(self.model_name, torch_dtype=torch.float16 if training_args.bf16 is False else torch.bfloat16, use_flash_attention_2=True, resume_download=True)
-
+            self.decoder = AutoModelForCausalLM.from_pretrained(
+                self.model_name, 
+                torch_dtype=torch.float16 if training_args.bf16 is False else torch.bfloat16,
+                device_map=None
+            )
+            
         self.vocab_size = self.icae.config.vocab_size + 1    # [PAD] token
         self.pad_token_id = self.vocab_size - 1
         self.mean_compression_rate = training_args.mean_compression_rate
@@ -181,7 +189,8 @@ class ICAE(torch.nn.Module):
             start_idx = segment_idx * segment_length
             end_idx = min((segment_idx + 1) * segment_length, total_length)
             segment_input_ids = input_ids[:, start_idx:end_idx]
-            segment_input_ids = torch.cat([segment_input_ids, self.append_sequence], dim=1)
+            append_seq = self.append_sequence.expand(batch_size, -1)
+            segment_input_ids = torch.cat([segment_input_ids, append_seq], dim=1)
             mem_flag = segment_input_ids >= self.vocab_size
 
             segment_input_embedding = self.icae.get_base_model().model.embed_tokens(segment_input_ids)
@@ -192,7 +201,7 @@ class ICAE(torch.nn.Module):
             segment_compress_outputs = segment_compress_outputs.hidden_states[-1]
 
             # collect memory tokens
-            compress_outputs[segment_idx*self.mem_size: self.mem_size*(segment_idx+1)] = segment_compress_outputs[mem_flag]
+            compress_outputs[segment_idx*self.mem_size: self.mem_size*(segment_idx+1)] = segment_compress_outputs[mem_flag][-self.mem_size:]
             
             del segment_input_ids, segment_input_embedding
             torch.cuda.empty_cache()

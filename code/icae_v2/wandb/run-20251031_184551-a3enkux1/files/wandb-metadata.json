@@ -1,0 +1,88 @@
+{
+  "os": "Linux-6.6.105+-x86_64-with-glibc2.35",
+  "python": "CPython 3.12.12",
+  "startedAt": "2025-10-31T18:45:51.274112Z",
+  "args": [
+    "--model_name_or_path",
+    "mistralai/Mistral-7B-Instruct-v0.2",
+    "--model_max_length",
+    "5120",
+    "--fixed_mem_size",
+    "128",
+    "--lora_r",
+    "128",
+    "--mean_compression_rate",
+    "4",
+    "--bf16",
+    "--per_device_train_batch_size",
+    "8",
+    "--per_device_eval_batch_size",
+    "8",
+    "--gradient_accumulation_steps",
+    "32",
+    "--learning_rate",
+    "1e-4",
+    "--warmup_steps",
+    "300",
+    "--max_steps",
+    "10000",
+    "--max_grad_norm",
+    "2.0",
+    "--optim",
+    "adamw_torch",
+    "--lr_scheduler_type",
+    "cosine",
+    "--logging_steps",
+    "10",
+    "--save_steps",
+    "500",
+    "--eval_steps",
+    "500",
+    "--output_dir",
+    "./output/mistral_7b_icae_pretrained",
+    "--lm_ratio",
+    "0.0",
+    "--min_tokens_for_lm",
+    "64",
+    "--leave_tokens_for_lm",
+    "8",
+    "--overwrite_output_dir",
+    "--report_to",
+    "wandb"
+  ],
+  "program": "/content/drive/MyDrive/Latent_Language-Stage-1/code/icae_v2/pretrain.py",
+  "codePath": "code/icae_v2/pretrain.py",
+  "codePathLocal": "pretrain.py",
+  "git": {
+    "remote": "git@github.com:ZhangchengCharles/Latent_Language-Stage-1.git",
+    "commit": "469a46886a92dd5e76b2d12a8bac0fb7ed7d4cdd"
+  },
+  "email": "kangzhangcheng@gmail.com",
+  "root": "/content/drive/MyDrive/Latent_Language-Stage-1/code/icae_v2",
+  "host": "690403b9ee15",
+  "executable": "/usr/bin/python3",
+  "cpu_count": 6,
+  "cpu_count_logical": 12,
+  "gpu": "NVIDIA A100-SXM4-80GB",
+  "gpu_count": 1,
+  "disk": {
+    "/": {
+      "total": "253055008768",
+      "used": "56903761920"
+    }
+  },
+  "memory": {
+    "total": "179370496000"
+  },
+  "gpu_nvidia": [
+    {
+      "name": "NVIDIA A100-SXM4-80GB",
+      "memoryTotal": "85899345920",
+      "cudaCores": 6912,
+      "architecture": "Ampere",
+      "uuid": "GPU-38a68492-e21f-1355-4409-6632c18ce21b"
+    }
+  ],
+  "cudaVersion": "12.4",
+  "writerId": "mm54kd56hpbc61jd8j15shjmfylvnfu3"
+}
